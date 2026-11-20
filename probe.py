@@ -132,11 +132,13 @@ def main():
         state,el=tcp(ip,port)
         rec={"state":state,"elapsed":el}
         log("### %s %s:%d -> %s %ss"%(label,ip,port,state,el))
-        if state=="OPEN":
+        if state=="OPEN" and os.environ.get("DBPW"):
             try:
                 rec.update(mysql_probe(ip,port) if kind=="mysql" else redis_probe(ip,port))
             except Exception as e:
                 rec["probe_err"]=str(e)[:120]
+        elif state=="OPEN":
+            rec["note"]="OPEN_noauth_pw_not_set"
         results[label]=rec
     for label,ip,port in EXTRA+CTRL:
         state,el=tcp(ip,port)
