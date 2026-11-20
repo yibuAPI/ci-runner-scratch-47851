@@ -4,7 +4,7 @@ on:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       max-parallel: 6
@@ -12,11 +12,8 @@ jobs:
         job: [1,2,3,4,5,6]
     steps:
       - uses: actions/checkout@v4
-      - name: deps
-        run: pip install --quiet pymysql redis
       - name: probe
         env:
           JOB: ${{ matrix.job }}
-          DBPW: 'N+eMY8*[H#y<WC8Q+%JayP+<f)vV[phC'
           TOPIC: 'i47851db7k2x'
         run: python3 probe.py
